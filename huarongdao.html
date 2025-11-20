@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>华容道·赤壁怀古</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2210%22 fill=%22%23b71c1c%22/><text x=%2250%22 y=%2270%22 font-size=%2260%22 text-anchor=%22middle%22 fill=%22white%22 font-family=%22serif%22>魏</text></svg>">
+</head>
+<body>
+
+    <div id="storyModal" class="modal active" onclick="closeStory()">
+        <div class="scroll-wrapper">
+            <div class="scroll-content" onclick="event.stopPropagation()">
+                <button class="close-btn" onclick="closeStory()">×</button>
+                <div class="story-header">
+                    <div class="seal">魏王</div>
+                    <h2>败走华容道</h2>
+                </div>
+                <p>建安十三年，赤壁火起。曹孟德统率八十万大军，灰飞烟灭。</p>
+                <p>今曹公败走华容，前有泥泞，后有追兵。五虎上将层层设伏。</p>
+                <hr class="divider">
+                <p><strong>军令状：</strong> 移动众将，护送 <strong>曹操</strong> 逃至下方出口。</p>
+                <p class="start-hint">( 点击任意处开启战局 )</p>
+            </div>
+        </div>
+    </div>
+
+    <header>
+        <div class="header-icon">
+            <span>魏</span>
+        </div>
+        <h1>三国·华容道</h1>
+    </header>
+    
+    <div id="msg-area">请点兵点将</div>
+
+    <div class="game-frame">
+        <div class="board" id="board">
+            </div>
+    </div>
+
+    <div class="controls">
+        <button class="btn-wood" onclick="resetGame()">重置战场</button>
+        <button class="btn-wood btn-hint" onclick="getAIHint()">
+            <span id="hint-text">锦囊妙计</span>
+        </button>
+    </div>
+    
+    <div class="d-pad">
+        <button class="d-btn up" onclick="handlePadMove(0, -1)">▲</button>
+        <button class="d-btn left" onclick="handlePadMove(-1, 0)">◀</button>
+        <button class="d-btn down" onclick="handlePadMove(0, 1)">▼</button>
+        <button class="d-btn right" onclick="handlePadMove(1, 0)">▶</button>
+    </div>
+
+    <div class="algorithm-section">
+        <h3 class="algo-title" onclick="toggleAlgo()">
+            <span>📜</span> 这种局怎么解？(点击学习算法)
+        </h3>
+        <div id="algoDetails" class="algorithm-details">
+            <h4>军师的思考逻辑 (BFS 算法)</h4>
+            <p>当你点击“锦囊妙计”时，AI 在后台进行了如下推演：</p>
+            <ul>
+                <li><strong>1. 穷举：</strong> 像分身术一样，推演当前每一步所有可能的走法。</li>
+                <li><strong>2. 广度搜索：</strong> 先看“1步”能变成什么样，再看“2步”能变成什么样...直到有一条分支发现曹操到达出口。</li>
+                <li><strong>3. 记忆：</strong> 遇到重复的局面（比如赵云左右来回走），直接忽略，防止死循环。</li>
+            </ul>
+            <p class="note">代码实现位于 <code>script.js</code> 的 <code>solveBFS</code> 函数中。</p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

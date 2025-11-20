@@ -1,0 +1,239 @@
+:root {
+    --bg-paper: #f4e4bc;
+    --wood-border: #5d4037;
+    --wood-dark: #3e2723;
+    --accent-red: #b71c1c;
+    --text-color: #2e2e2e;
+    --selection-glow: 0 0 15px #ffd700;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: "KaiTi", "STKaiti", "楷体", serif;
+    background-color: var(--bg-paper);
+    background-image: url('https://www.transparenttextures.com/patterns/aged-paper.png'); /* 纸张纹理 */
+    color: var(--text-color);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    user-select: none;
+}
+
+/* --- Header & Icon --- */
+header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-top: 20px;
+    border-bottom: 3px double var(--wood-dark);
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+}
+
+.header-icon {
+    width: 50px;
+    height: 50px;
+    background-color: var(--accent-red);
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 32px;
+    font-weight: bold;
+    box-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    border: 2px solid #8e0000;
+}
+
+h1 {
+    margin: 0;
+    font-size: 2.2rem;
+    text-shadow: 1px 1px 0 rgba(0,0,0,0.1);
+}
+
+/* --- Game Board --- */
+.game-frame {
+    padding: 12px;
+    background: var(--wood-dark);
+    border-radius: 8px;
+    box-shadow: 0 15px 30px rgba(0,0,0,0.5);
+    margin-bottom: 15px;
+}
+
+.board {
+    position: relative;
+    width: 320px;
+    height: 400px;
+    background: #d7ccc8;
+    /* 棋盘内部纹理 */
+    background-image: linear-gradient(rgba(0,0,0,0.1) 1px, transparent 1px),
+                      linear-gradient(90deg, rgba(0,0,0,0.1) 1px, transparent 1px);
+    background-size: 80px 80px; 
+    overflow: hidden;
+    border: 2px inset #a1887f;
+}
+
+/* --- Blocks (The Pieces) --- */
+.block {
+    position: absolute;
+    box-sizing: border-box;
+    border: 2px solid rgba(62, 39, 35, 0.8);
+    border-radius: 6px;
+    cursor: pointer;
+    
+    /* 关键：平滑动画 */
+    transition: top 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94), 
+                left 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                transform 0.1s;
+    
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    
+    /* 阴影增加立体感 */
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.2), 2px 4px 6px rgba(0,0,0,0.4);
+    
+    /* 文字样式 (如果图片加载失败或作为辅助) */
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    padding-bottom: 5px;
+    font-weight: bold;
+    color: rgba(255,255,255,0.9);
+    text-shadow: 1px 1px 2px black;
+    font-size: 1.2rem;
+}
+
+.block:active {
+    transform: scale(0.96);
+}
+
+.block.selected {
+    border-color: #ff3d00;
+    z-index: 100;
+    box-shadow: 0 0 15px #ff9100, inset 0 0 5px #ff9100;
+    filter: brightness(1.1);
+}
+
+/* --- Controls --- */
+#msg-area {
+    height: 24px;
+    color: var(--accent-red);
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.controls {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.btn-wood {
+    background: var(--wood-dark);
+    color: #fff;
+    border: 1px solid #281815;
+    padding: 8px 20px;
+    font-family: inherit;
+    font-size: 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    box-shadow: 0 3px 0 #281815;
+    transition: transform 0.1s;
+}
+
+.btn-wood:active {
+    transform: translateY(3px);
+    box-shadow: none;
+}
+
+.btn-hint {
+    background: var(--accent-red);
+    border-color: #7f0000;
+    box-shadow: 0 3px 0 #500000;
+}
+
+/* D-Pad */
+.d-pad {
+    display: grid;
+    grid-template-columns: 50px 50px 50px;
+    grid-template-rows: 50px 50px;
+    gap: 5px;
+}
+
+.d-btn {
+    background: rgba(93, 64, 55, 0.8);
+    border: 2px solid var(--wood-dark);
+    color: white;
+    font-size: 1.2rem;
+    border-radius: 8px;
+    cursor: pointer;
+}
+.d-btn:active { background: var(--wood-dark); }
+.d-btn.up { grid-column: 2; grid-row: 1; }
+.d-btn.left { grid-column: 1; grid-row: 2; }
+.d-btn.down { grid-column: 2; grid-row: 2; }
+.d-btn.right { grid-column: 3; grid-row: 2; }
+
+/* --- Modal & Algo --- */
+.modal {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.8);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 200;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+.modal.active { display: flex; opacity: 1; }
+
+.scroll-content {
+    background: var(--bg-paper);
+    padding: 30px;
+    border: 8px solid var(--wood-dark);
+    border-radius: 4px;
+    max-width: 500px;
+    position: relative;
+    text-align: center;
+    box-shadow: 0 0 50px rgba(0,0,0,0.8);
+}
+.seal {
+    display: inline-block;
+    border: 3px solid var(--accent-red);
+    color: var(--accent-red);
+    padding: 5px 10px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    transform: rotate(-10deg);
+    margin-bottom: 10px;
+    border-radius: 4px;
+}
+.close-btn {
+    position: absolute;
+    top: 5px; right: 10px;
+    background: none; border: none;
+    font-size: 2rem; cursor: pointer;
+}
+
+.algorithm-section {
+    margin-top: 30px;
+    width: 90%;
+    max-width: 500px;
+    border-top: 1px dashed var(--wood-border);
+}
+.algo-title {
+    cursor: pointer;
+    color: var(--wood-border);
+    text-align: center;
+}
+.algorithm-details {
+    display: none;
+    background: rgba(255,255,255,0.5);
+    padding: 15px;
+    border-radius: 5px;
+}
+.algorithm-details.show { display: block; }
