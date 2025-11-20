@@ -377,3 +377,55 @@ function toggleAlgo() {
 
 // 启动
 initGame();
+
+// --- 新增：触屏/鼠标点击空白处移动逻辑 ---
+
+const boardContainer = document.getElementById('board');
+
+boardContainer.onclick = function(e) {
+    // 如果没有选中棋子，点击空白处无效
+    if (!selectedBlockId) return;
+
+    // 获取当前选中的棋子对象
+    const block = blocks.find(b => b.id === selectedBlockId);
+    if (!block) return;
+
+    // 1. 计算点击位置相对于棋盘的坐标
+    const rect = boardContainer.getBoundingClientRect();
+    // 使用 clientX/Y 获取点击点，减去棋盘偏移量
+    const clickX = e.clientX - rect.left; 
+    const clickY = e.clientY - rect.top;
+
+    // 2. 转换为网格坐标 (0-3, 0-4)
+    const gridX = Math.floor(clickX / BLOCK_SIZE);
+    const gridY = Math.floor(clickY / BLOCK_SIZE);
+
+    // 3. 判断点击点与选中棋子的关系
+    let dx = 0;
+    let dy = 0;
+
+    // 逻辑：判断点击的格子是否紧邻棋子，并且在棋子的宽度/高度范围内
+    
+    // 检查是否在【上方】 (行号是 y-1, 列号在 x 到 x+w 之间)
+    if (gridY === block.y - 1 && gridX >= block.x && gridX < block.x + block.w) {
+        dx = 0; dy = -1;
+    }
+    // 检查是否在【下方】 (行号是 y+h, 列号在 x 到 x+w 之间)
+    else if (gridY === block.y + block.h && gridX >= block.x && gridX < block.x + block.w) {
+        dx = 0; dy = 1;
+    }
+    // 检查是否在【左方】 (列号是 x-1, 行号在 y 到 y+h 之间)
+    else if (gridX === block.x - 1 && gridY >= block.y && gridY < block.y + block.h) {
+        dx = -1; dy = 0;
+    }
+    // 检查是否在【右方】 (列号是 x+w, 行号在 y 到 y+h 之间)
+    else if (gridX === block.x + block.w && gridY >= block.y && gridY < block.y + block.h) {
+        dx = 1; dy = 0;
+    }
+
+    // 4. 如果有点到合法的方向，则尝试移动
+    if (dx !== 0 || dy !== 0) {
+        // 调用已有的移动函数
+        handlePadMove(dx, dy);
+    }
+};

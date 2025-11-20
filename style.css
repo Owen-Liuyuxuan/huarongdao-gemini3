@@ -73,6 +73,7 @@ h1 {
     background-size: 80px 80px; 
     overflow: hidden;
     border: 2px inset #a1887f;
+    cursor: pointer;
 }
 
 /* --- Blocks (The Pieces) --- */
